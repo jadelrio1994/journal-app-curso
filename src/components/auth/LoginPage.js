@@ -1,13 +1,15 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { login } from '../../actions/auth'
+import { login, startGoogleLogin, startLoginEmailPassword } from '../../actions/auth'
 import { useForm } from '../../hooks/useForm'
 
 export const LoginPage = () => {
 
   const dispatch = useDispatch();
+
+  const { loading } = useSelector( state => state.ui);
 
   const [{ email, password }, handleInputChange] = useForm({
     email: 'nando@gmail.com',
@@ -16,7 +18,11 @@ export const LoginPage = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    dispatch( login('12345',  'Javier') );
+    dispatch( startLoginEmailPassword(email,  password) );
+  }
+
+  const handleGoogleLogin = () => {
+    dispatch(startGoogleLogin());
   }
 
   return (
@@ -46,6 +52,7 @@ export const LoginPage = () => {
         <button
           type="submit"
           className="btn btn-primary btn-block"
+          disabled={ loading }
         >
           Login
         </button>
@@ -55,6 +62,7 @@ export const LoginPage = () => {
 
           <div
             className="google-btn"
+            onClick={handleGoogleLogin}
           >
             <div className="google-icon-wrapper">
               <img className="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="google button" />
