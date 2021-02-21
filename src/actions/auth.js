@@ -1,9 +1,12 @@
-import { types } from "../data/types";
 import { firebase, googleAuthProvider } from '../firebase/firebase-config';
+import Swal from 'sweetalert2'
+
+import { types } from "../data/types";
 import { finishLoading, startLoading } from "./ui";
 
 export const startLoginEmailPassword = (email, password) => {
   return (dispatch) => {
+
     dispatch(startLoading())
 
     firebase.auth().signInWithEmailAndPassword(email, password)
@@ -15,8 +18,8 @@ export const startLoginEmailPassword = (email, password) => {
       })
       .catch(e => {
 
-        console.log(e)
-        dispatch(finishLoading())
+        dispatch(finishLoading());
+        Swal.fire('Error', e.message, 'error');
 
       })
   }
@@ -29,11 +32,13 @@ export const startRegisterEmailPassword = (email, password, name) => {
 
         await user.updateProfile({ displayName: name });
 
-        dispatch(
-          login(user.uid, user.displayName)
-        )
-      }).catch(e => {
-        console.log(e)
+        dispatch(login(user.uid, user.displayName))
+
+      })
+      .catch(e => {
+
+        Swal.fire('Error', e.message, 'error');
+
       })
   }
 }
@@ -55,5 +60,16 @@ export const login = (uid, displayName) => ({
     uid,
     displayName
   }
-})
+});
 
+
+export const startLogout = () => {
+  return async (dispatch) => {
+    await firebase.auth().signOut();
+    dispatch(logout());
+  }
+}
+
+export const logout = () => ({
+  type: types.logout
+})
