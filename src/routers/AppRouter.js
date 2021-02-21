@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../actions/auth";
 import { PrivateRoute } from "./PrivateRoute";
 import { PublicRoute } from "./PublicRoute";
+import { LoadingPage } from "../components/LoadingPage";
 
 export const AppRouter = () => {
 
@@ -35,7 +36,7 @@ export const AppRouter = () => {
 
   if (checking) {
     return (
-      <h1>Espere...</h1>
+      <LoadingPage />
     )
   }
 
